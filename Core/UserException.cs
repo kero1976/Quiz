@@ -8,7 +8,7 @@ namespace Core
 {
     public class UserException:Exception
     {
-        static ResourceLoader resourceLoader = null;
+        static ResourceLoader resourceLoader = ResourceLoader.GetForViewIndependentUse("Core/Resources");
 
 
         string filePath;
@@ -18,7 +18,7 @@ namespace Core
 
         string errCode;
         Exception innerException;
-        public UserException(string errCode, string[] errParams, Exception innerException,[CallerFilePath] string filePath = "", [CallerMemberName] string methodName = "", [System.Runtime.CompilerServices.CallerLineNumber] int sourceLineNumber = 0)
+        public UserException(string errCode, string[] errParams, Exception innerException,[CallerFilePath] string filePath = "", [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0)
         {
             this.filePath = filePath;
             this.methodName = methodName;
@@ -28,18 +28,21 @@ namespace Core
             this.innerException = innerException;
         }
 
+        public UserException(string errCode, string errParam, Exception innerException, [CallerFilePath] string filePath = "", [CallerMemberName] string methodName = "", [CallerLineNumber] int sourceLineNumber = 0)
+        {
+            this.filePath = filePath;
+            this.methodName = methodName;
+            this.errCode = errCode;
+            this.sourceLineNumber = sourceLineNumber;
+            this.errParams = new string[] { errParam };
+            this.innerException = innerException;
+        }
 
 
         public override string ToString()
         {
-            
-
-            resourceLoader = ResourceLoader.GetForViewIndependentUse("Core/Resources");
             string messsage = resourceLoader.GetString(errCode);
             return string.Format(messsage, errParams);
-
-
-
          }
 
 
