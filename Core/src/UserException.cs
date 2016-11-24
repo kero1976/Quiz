@@ -4,7 +4,7 @@ using Windows.ApplicationModel.Resources;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Core
+namespace Quiz.Core
 {
     public class UserException:Exception
     {

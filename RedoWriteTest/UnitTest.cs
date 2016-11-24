@@ -1,7 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+﻿using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using Quiz.Core;
 using Quiz.ReadWrite;
-using Core;
 using System.Collections.Generic;
 
 namespace RedoWriteTest
@@ -13,7 +12,7 @@ namespace RedoWriteTest
         public void 正常系の読み込みstring()
         {
             string actual = File.ReadAllString("test.txt");
-            string expected = "1+1=,2,1,3,4\r\n2+2=4,1,2,3";
+            string expected = "1+1=,2,1,3,4\r\n2+2=,4,1,2,3";
             Assert.AreEqual(expected, actual);
         }
 
@@ -25,7 +24,7 @@ namespace RedoWriteTest
                 List<string> actual = File.ReadAllLine("test.txt");
                 List<string> expected = new List<string>();
                 expected.Add("1+1=,2,1,3,4");
-                expected.Add("2+2=4,1,2,3");
+                expected.Add("2+2=,4,1,2,3");
 
                 CollectionAssert.AreEqual(expected, actual);
 

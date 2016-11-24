@@ -107,7 +107,9 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\CsvUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\DataRead.cs" />
     <Compile Include="src\File.cs" />
     <EmbeddedResource Include="Properties\ReadWrite.rd.xml" />
   </ItemGroup>
