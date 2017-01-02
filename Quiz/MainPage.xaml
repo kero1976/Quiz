@@ -12,11 +12,11 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="0,30,0,0">
             <StackPanel Orientation="Horizontal">
-                <Button x:Name="btnBack" Content="前へ"/>
+                <Button x:Name="btnBack" Content="前へ" Command="{Binding BackCommand}"/>
                 <TextBlock x:Name="lblCurrent" Text="{Binding Path=QuestionNo}"/>
                 <TextBlock Text="/"/>
-                <TextBlock x:Name="lblMax" Text="?"/>
-                <Button x:Name="btnNext" Content="次へ" Command="{Binding Next}"/>
+                <TextBlock x:Name="lblMax" Text="{Binding Path=QuestionCount}"/>
+                <Button x:Name="btnNext" Content="次へ" Command="{Binding NextCommand}"/>
             </StackPanel>
 
             <TextBlock x:Name="mondai" Text="{Binding Path=Question.Sentence}"/>
