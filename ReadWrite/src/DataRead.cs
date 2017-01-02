@@ -1,6 +1,8 @@
-﻿using Quiz.Core.Data;
+﻿using Quiz.Core;
+using Quiz.Core.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,21 +18,37 @@ namespace Quiz.ReadWrite
             string allString = File.ReadAllString(file);
 
             // CSV形式に分解
-            var datas = CsvUtil.analyze(allString);
+            var rows = CsvUtil.analyze(allString);
+
+            // データ行数
+            int rowNo = 1;
 
             // 問題オブジェクトに格納
-            foreach(var data in datas)
+            foreach(var row in rows)
             {
-                Question question = new Question(
-                    data["0"],
-                    new List<string>()
-                    {
-                        data["2"],
-                        data["3"],
-                        data["4"],
-                    },
-                    data["1"]);
-                result.Add(question);
+                Question question;
+                try
+                {
+                    // 回答と回答候補。この後ランダムに並び替えてセットする。
+                    var candidate = new List<string>()
+                        {
+                        row["1"],
+                        row["2"],
+                        row["3"],
+                        row["4"],
+                        };
+                    question = new Question(
+                        row["0"],
+                        candidate.OrderBy(i => Guid.NewGuid()).ToList(),
+                        row["1"]);
+                    result.Add(question);
+                    rowNo++;
+                }
+                catch(Exception e)
+                {
+                    string data = String.Join(", ", from v in row select v.Key + "=>" + v.Value);
+                    throw new UserException("ERR1002", new string[] { file, rowNo.ToString(), data }, e);
+                }
             }
             return result;
         }

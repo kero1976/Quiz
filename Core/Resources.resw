@@ -120,4 +120,7 @@
   <data name="ERR1001" xml:space="preserve">
     <value>ファイル({0})の読み込みに失敗しました。</value>
   </data>
+  <data name="ERR1002" xml:space="preserve">
+    <value>ファイル({0})の{1}行目の書式が不正です。{2}</value>
+  </data>
 </root>

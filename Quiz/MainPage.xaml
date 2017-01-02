@@ -6,8 +6,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-
+    <Page.DataContext>
+        <local:MainPageModel />
+    </Page.DataContext>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <StackPanel Margin="0,30,0,0">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btnBack" Content="前へ"/>
+                <TextBlock x:Name="lblCurrent" Text="{Binding Path=QuestionNo}"/>
+                <TextBlock Text="/"/>
+                <TextBlock x:Name="lblMax" Text="?"/>
+                <Button x:Name="btnNext" Content="次へ" Command="{Binding Next}"/>
+            </StackPanel>
+
+            <TextBlock x:Name="mondai" Text="{Binding Path=Question.Sentence}"/>
+            <RadioButton x:Name="a" Content="{Binding Path=Question.Candidate[0]}" />
+            <RadioButton x:Name="b" Content="{Binding Path=Question.Candidate[1]}" />
+            <RadioButton x:Name="c" Content="{Binding Path=Question.Candidate[2]}" />
+            <RadioButton x:Name="d" Content="{Binding Path=Question.Candidate[3]}" />
+            <Button x:Name="bntAnswer" Content="回答" />
+        </StackPanel>
 
     </Grid>
 </Page>
