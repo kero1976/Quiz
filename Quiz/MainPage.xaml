@@ -3,12 +3,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Quiz"
+    xmlns:localcore="using:Core.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.DataContext>
         <local:MainPageModel />
     </Page.DataContext>
+    <Page.Resources>
+        <localcore:RadioButtonConverter x:Key="RadioButtonConverter"/>
+    </Page.Resources>
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="0,30,0,0">
             <StackPanel Orientation="Horizontal">
@@ -20,11 +24,20 @@
             </StackPanel>
 
             <TextBlock x:Name="mondai" Text="{Binding Path=Question.Sentence}"/>
-            <RadioButton x:Name="a" Content="{Binding Path=Question.Candidate[0]}" />
-            <RadioButton x:Name="b" Content="{Binding Path=Question.Candidate[1]}" />
-            <RadioButton x:Name="c" Content="{Binding Path=Question.Candidate[2]}" />
-            <RadioButton x:Name="d" Content="{Binding Path=Question.Candidate[3]}" />
-            <Button x:Name="bntAnswer" Content="回答" />
+            <RadioButton Tag="A" Content="{Binding Path=Question.Candidate[0]}" 
+                       IsChecked="{Binding RadioValue, ConverterParameter=A,
+                              Converter={StaticResource RadioButtonConverter},Mode=TwoWay}"/>
+            <RadioButton Tag="B" Content="{Binding Path=Question.Candidate[1]}" 
+                       IsChecked="{Binding RadioValue, ConverterParameter=B,
+                              Converter={StaticResource RadioButtonConverter},Mode=TwoWay}"/>
+            <RadioButton Tag="C" Content="{Binding Path=Question.Candidate[2]}"
+                        IsChecked="{Binding RadioValue, ConverterParameter=C,
+                              Converter={StaticResource RadioButtonConverter},Mode=TwoWay}"/>
+            <RadioButton Tag="D" Content="{Binding Path=Question.Candidate[3]}" 
+                        IsChecked="{Binding RadioValue, ConverterParameter=D,
+                              Converter={StaticResource RadioButtonConverter},Mode=TwoWay}"/>
+            <Button x:Name="bntAnswer" Content="回答"  Command="{Binding AnswerCommand}"/>
+            <TextBlock FontSize="24" Text="{Binding RadioValue, Mode=TwoWay}" />
         </StackPanel>
 
     </Grid>
