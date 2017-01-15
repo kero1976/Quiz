@@ -1,14 +1,11 @@
-﻿using Quiz.Core.Data;
+﻿using Core.Converter;
+using Quiz.Core.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows;
 using System.ComponentModel;
 using System.Diagnostics;
-using Core.Converter;
+using System.Windows.Input;
+using Windows.UI.Popups;
 
 namespace Quiz
 {
@@ -100,6 +97,7 @@ namespace Quiz
             RaisePropertyChanged("Question");
             RaisePropertyChanged("BackCommand");
             RaisePropertyChanged("NextCommand");
+            RaisePropertyChanged("GradingCommand");
         }
 
         /// <summary>
@@ -143,6 +141,7 @@ namespace Quiz
             RaisePropertyChanged("Question");
             RaisePropertyChanged("BackCommand");
             RaisePropertyChanged("NextCommand");
+            RaisePropertyChanged("GradingCommand");
         }
         /// <summary>
         /// 前へボタンの有効判定
@@ -176,38 +175,31 @@ namespace Quiz
         }
         #endregion
 
-        #region Checkdボタン
-        //private void CheckCommandExecute(object parameter)
-        //{
-        //    Debug.WriteLine("チェックされました:" + parameter);
-        //}
-
-        //private bool CheckCommandCanExecute(object parameter)
-        //{
-        //    return true;
-        //}
-
-
-        //private ICommand _checkCommand;
-        //public ICommand CheckCommand
-        //{
-        //    get
-        //    {
-        //        if (_backCommand == null)
-        //            _backCommand = new DelegateCommand
-        //            {
-        //                ExecuteHandler = CheckCommandExecute,
-        //                CanExecuteHandler = CheckCommandCanExecute,
-        //            };
-        //        return _checkCommand;
-        //    }
-        //}
-        #endregion
-
         #region Answerボタン
         private void AnswerCommandExecute(object parameter)
         {
-            Debug.WriteLine("回答が押されました" + parameter);
+            Debug.WriteLine("回答が押されました" + parameter.ToString());
+            int index = -1;
+            string answer = parameter.ToString();
+            switch (answer) {
+                case "A":
+                    index = 0;
+                    break;
+                case "B":
+                    index = 1;
+                    break;
+                case "C":
+                    index = 2;
+                    break;
+                case "D":
+                    index = 3;
+                    break;
+            }
+
+            //回答内容を保存
+            
+            exam.Ansers.Add(Question.Candidate[index]);
+
             RaisePropertyChanged("RadioValue");
         }
         /// <summary>
@@ -234,6 +226,47 @@ namespace Quiz
                         CanExecuteHandler = AnswerCommandCanExecute,
                     };
                 return _answerCommand;
+            }
+        }
+        #endregion
+
+
+
+        #region 採点ボタン
+        private async void GradingCommandExecute(object parameter)
+        {
+            exam.Check();
+            var dlg = new MessageDialog("点数は" + exam.Score, "タイトル");
+            await dlg.ShowAsync();
+        }
+        /// <summary>
+        /// 採点ボタンの有効判定
+        /// </summary>
+        /// 現在の問題番号(QuestionNo)が最後の問題の場合は有効
+        /// <param name="parameter">未使用</param>
+        /// <returns>true:ボタン有効, false:ボタン無効</returns>
+        private bool GradingCommandCanExecute(object parameter)
+        {
+            if (this.QuestionNo == (this.QuestionCount))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        private ICommand _gradingCommand;
+        public ICommand GradingCommand
+        {
+            get
+            {
+                if (_gradingCommand == null)
+                    _gradingCommand = new DelegateCommand
+                    {
+                        ExecuteHandler = GradingCommandExecute,
+                        CanExecuteHandler = GradingCommandCanExecute,
+                    };
+                return _gradingCommand;
             }
         }
         #endregion

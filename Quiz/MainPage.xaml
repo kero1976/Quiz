@@ -36,8 +36,9 @@
             <RadioButton Tag="D" Content="{Binding Path=Question.Candidate[3]}" 
                         IsChecked="{Binding RadioValue, ConverterParameter=D,
                               Converter={StaticResource RadioButtonConverter},Mode=TwoWay}"/>
-            <Button x:Name="bntAnswer" Content="回答"  Command="{Binding AnswerCommand}"/>
-            <TextBlock FontSize="24" Text="{Binding RadioValue, Mode=TwoWay}" />
+            <Button x:Name="bntAnswer" Content="回答"  Command="{Binding AnswerCommand}" CommandParameter="{Binding RadioValue}"/>
+
+            <Button x:Name="button" Content="採点" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding GradingCommand}"/>
         </StackPanel>
 
     </Grid>
