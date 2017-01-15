@@ -178,7 +178,6 @@ namespace Quiz
         #region Answerボタン
         private void AnswerCommandExecute(object parameter)
         {
-            Debug.WriteLine("回答が押されました" + parameter.ToString());
             int index = -1;
             string answer = parameter.ToString();
             switch (answer) {
@@ -197,10 +196,27 @@ namespace Quiz
             }
 
             //回答内容を保存
-            
-            exam.Ansers.Add(Question.Candidate[index]);
+            if (exam.Ansers.Count < this.QuestionNo)
+            {
+                exam.Ansers.Add(Question.Candidate[index]);
+            }else
+            {
+                exam.Ansers[i] = Question.Candidate[index];
+            }
+
 
             RaisePropertyChanged("RadioValue");
+
+            if (this.QuestionNo == this.QuestionCount)
+            {
+                GradingCommandExecute(null);
+            }
+            else
+            {
+                NextCommandExecute(null);
+            }
+
+
         }
         /// <summary>
         /// 前へボタンの有効判定
@@ -236,7 +252,7 @@ namespace Quiz
         private async void GradingCommandExecute(object parameter)
         {
             exam.Check();
-            var dlg = new MessageDialog("点数は" + exam.Score, "タイトル");
+            var dlg = new MessageDialog("点数は" + exam.Score, "採点結果");
             await dlg.ShowAsync();
         }
         /// <summary>
