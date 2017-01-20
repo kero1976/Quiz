@@ -99,7 +99,8 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPageModel.cs" />
+    <Compile Include="src\Commands.cs" />
+    <Compile Include="src\MainPageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Exam.cs" />
   </ItemGroup>

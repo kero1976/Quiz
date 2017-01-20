@@ -14,9 +14,6 @@ namespace Quiz
         // 試験クラス
         Exam exam;
 
-        // 内部用の問題番号(0スタート)
-        int i;
-
         // RadioButtonの選択保存用
         private AbcdEnum radioValue;
 
@@ -58,13 +55,13 @@ namespace Quiz
         public MainPageModel()
         {
             exam = new Quiz.Exam("test.txt");
-            i = 0;
         }
+
         public int QuestionNo
         {
             get
             {
-                return i + 1;
+                return exam.QuestionNo;
             }
         }
 
@@ -72,21 +69,21 @@ namespace Quiz
         {
             get
             {
-                return exam.Questions[i];
+                return exam.CurrentQuestion;
             }
         }
         #region Nextボタン
 
         private void NextCommandExecute(object parameter)
         {
-            i++;
+            exam.NextQuestion();
             RaisePropertyChanges();
 
-            Debug.WriteLine("NEXTボタン" + i);
-            if (i < exam.Ansers.Count)
+            Debug.WriteLine("NEXTボタン" );
+            if (exam.isAnswer)
             {
                 // 既に設定されている回答にラジオボタンをセットする。
-                RadioValue = exam.Ansers[i];
+                RadioValue = exam.CurrentAnswer;
             }
             else
             {
@@ -136,9 +133,9 @@ namespace Quiz
         #region Backボタン
         private void BackCommandExecute(object parameter)
         {
-            i--;
+            exam.BackQuestion();
             RaisePropertyChanges();
-            RadioValue = exam.Ansers[i];
+            RadioValue = exam.CurrentAnswer;
         }
         /// <summary>
         /// 前へボタンの有効判定
@@ -182,7 +179,7 @@ namespace Quiz
             }
             else
             {
-                exam.Ansers[i] = (AbcdEnum)parameter;
+                exam.CurrentAnswer = (AbcdEnum)parameter;
             }
 
             if (this.QuestionNo == this.QuestionCount)

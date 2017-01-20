@@ -28,6 +28,12 @@ namespace Quiz
         private List<AbcdEnum> answers = new List<AbcdEnum>();
 
         /// <summary>
+        /// 現在の問題番号
+        /// </summary>
+        /// 内部用で0スタート。
+        private int currentQuestionNo;
+
+        /// <summary>
         /// コンストラクタ。
         /// </summary>
         /// 問題文を読み込み、点数を初期化する。
@@ -35,6 +41,7 @@ namespace Quiz
         public Exam(string file)
         {
             this.score = 0;
+            this.currentQuestionNo = 0;
             this.questions = DataRead.ReadQuestion(file);
         }
 
@@ -49,6 +56,57 @@ namespace Quiz
             }
         }
 
+        /// <summary>
+        /// 既に回答済みかどうか
+        /// </summary>
+        public bool isAnswer
+        {
+            get
+            {
+                return currentQuestionNo < Ansers.Count ? true : false;
+            }
+        }
+        public AbcdEnum CurrentAnswer
+        {
+            get
+            {
+                return Ansers[currentQuestionNo];
+            }
+            set
+            {
+                Ansers[currentQuestionNo] = value;
+            }
+        }
+
+        public void NextQuestion()
+        {
+            currentQuestionNo++;
+        }
+
+        public void BackQuestion()
+        {
+            currentQuestionNo--;
+        }
+
+        public Question CurrentQuestion
+        {
+            get
+            {
+                return questions[currentQuestionNo];
+            }
+
+        }
+        /// <summary>
+        /// 問題番号
+        /// </summary>
+        /// 1スタート
+        public int QuestionNo
+        {
+            get
+            {
+                return currentQuestionNo + 1;
+            }
+        }
         /// <summary>
         /// 回答群
         /// </summary>
