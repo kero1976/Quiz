@@ -58,5 +58,26 @@ namespace Core.Converter
             // ConverterParameterをintに変換して返す
             return ConvertFromConverterParameter(parameter);
         }
+
+        /// <summary>
+        /// A,B,C,Dを0,1,2,3に変換する
+        /// </summary>
+        /// <param name="val">A,B,C,D</param>
+        /// <returns>0,1,2,3</returns>
+        public static int AbcdToInt(AbcdEnum val)
+        {
+            switch (val){
+                case AbcdEnum.A:
+                    return 0;
+                case AbcdEnum.B:
+                    return 1;
+                case AbcdEnum.C:
+                    return 2;
+                case AbcdEnum.D:
+                    return 3;
+            }
+            // ここに来ることはないはず
+            return -1;
+        }
     }
 }

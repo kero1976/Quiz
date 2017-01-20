@@ -1,6 +1,8 @@
-﻿using Quiz.Core.Data;
+﻿using Core.Converter;
+using Quiz.Core.Data;
 using Quiz.ReadWrite;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Quiz
 {
@@ -23,7 +25,7 @@ namespace Quiz
         /// <summary>
         /// 回答群
         /// </summary>
-        private List<string> answers = new List<string>();
+        private List<AbcdEnum> answers = new List<AbcdEnum>();
 
         /// <summary>
         /// コンストラクタ。
@@ -50,7 +52,7 @@ namespace Quiz
         /// <summary>
         /// 回答群
         /// </summary>
-        public List<string> Ansers
+        public List<AbcdEnum> Ansers
         {
             set
             {
@@ -70,7 +72,8 @@ namespace Quiz
             score = 0;
             for (int i = 0; i < questions.Count; i++)
             {
-                if (questions[i].Decision(answers[i]))
+                int index = RadioButtonConverter.AbcdToInt(answers[i]);
+                if (questions[i].Decision(questions[i].Candidate[index]))
                 {
                     score++;
                 }
@@ -86,6 +89,16 @@ namespace Quiz
             {
                 return score;
             }
+        }
+
+        public void DebugMessage()
+        {
+            for (int i = 0; i < Ansers.Count; i++)
+            {
+                string val = string.Format("[{0}]:{1}, ", i, Ansers[i]);
+                Debug.Write(val);
+            }
+            Debug.WriteLine("");
         }
     }
 }

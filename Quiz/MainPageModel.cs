@@ -29,23 +29,11 @@ namespace Quiz
             }
             get
             {
+                RaisePropertyChanged("RadioValue");
                 return radioValue;
             }
         }
 
-        private List<string> answerList;
-
-        public string Answer
-        {
-            get
-            {
-                return answerList[i];
-            }
-            set
-            {
-                answerList[i] = value;
-            }
-        }
         /// <summary>
         /// 問題数
         /// </summary>
@@ -71,7 +59,6 @@ namespace Quiz
         {
             exam = new Quiz.Exam("test.txt");
             i = 0;
-            answerList = new List<string>();
         }
         public int QuestionNo
         {
@@ -93,11 +80,28 @@ namespace Quiz
         private void NextCommandExecute(object parameter)
         {
             i++;
-            RaisePropertyChanged("QuestionNo");
-            RaisePropertyChanged("Question");
-            RaisePropertyChanged("BackCommand");
-            RaisePropertyChanged("NextCommand");
-            RaisePropertyChanged("GradingCommand");
+            RaisePropertyChanges(false);
+            try
+            {
+                Debug.WriteLine("NEXTボタン" + i);
+                if(i < exam.Ansers.Count)
+                {
+                    // 既に設定されている回答にラジオボタンをセットする。
+                    RadioValue = exam.Ansers[i];
+                }else
+                {
+                    RadioValue = AbcdEnum.A;
+                }
+                RaisePropertyChanged("BackCommand");
+            }
+            catch(Exception e)
+            {
+                
+                Debug.WriteLine("NEXTボタンで例外発生");
+            }
+
+            exam.DebugMessage();
+            RaisePropertyChanged("RadioValue");
         }
 
         /// <summary>
@@ -137,11 +141,23 @@ namespace Quiz
         private void BackCommandExecute(object parameter)
         {
             i--;
-            RaisePropertyChanged("QuestionNo");
-            RaisePropertyChanged("Question");
-            RaisePropertyChanged("BackCommand");
-            RaisePropertyChanged("NextCommand");
-            RaisePropertyChanged("GradingCommand");
+            RaisePropertyChanges(true);
+
+
+            try
+            {
+                Debug.WriteLine("BACKボタン" + i);
+                var tmp = exam.Ansers[i];
+                RaisePropertyChanged("NextCommand");
+                RadioValue = tmp;
+                Debug.WriteLine(RadioValue);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("BACKボタンで例外発生");
+            }
+            exam.DebugMessage();
+            RaisePropertyChanged("RadioValue");
         }
         /// <summary>
         /// 前へボタンの有効判定
@@ -178,34 +194,18 @@ namespace Quiz
         #region Answerボタン
         private void AnswerCommandExecute(object parameter)
         {
-            int index = -1;
-            string answer = parameter.ToString();
-            switch (answer) {
-                case "A":
-                    index = 0;
-                    break;
-                case "B":
-                    index = 1;
-                    break;
-                case "C":
-                    index = 2;
-                    break;
-                case "D":
-                    index = 3;
-                    break;
-            }
-
+            RaisePropertyChanged("RadioValue");
             //回答内容を保存
             if (exam.Ansers.Count < this.QuestionNo)
             {
-                exam.Ansers.Add(Question.Candidate[index]);
+                exam.Ansers.Add((AbcdEnum)parameter);
             }else
             {
-                exam.Ansers[i] = Question.Candidate[index];
+                exam.Ansers[i] = (AbcdEnum)parameter;
             }
 
 
-            RaisePropertyChanged("RadioValue");
+            //RaisePropertyChanged("RadioValue");
 
             if (this.QuestionNo == this.QuestionCount)
             {
@@ -286,5 +286,28 @@ namespace Quiz
             }
         }
         #endregion
+
+        /// <summary>
+        /// 画面更新処理
+        /// </summary>
+        /// ・問題番号
+        /// ・問題(問題文、回答候補)
+        /// ・戻るボタン
+        /// ・次へボタン
+        /// ・採点ボタン
+        /// <param name="isBack"></param>
+        private void RaisePropertyChanges(bool isBack)
+        {
+            RaisePropertyChanged("QuestionNo");
+            RaisePropertyChanged("Question");
+            if (isBack)
+            {
+                RaisePropertyChanged("BackCommand");
+            }else
+            {
+                RaisePropertyChanged("NextCommand");
+            }
+            RaisePropertyChanged("GradingCommand");
+        }
     }
 }
